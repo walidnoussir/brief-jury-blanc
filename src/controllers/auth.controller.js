@@ -23,11 +23,7 @@ export const registerController = async (req, res) => {
 
 export const loginController = async (req, res) => {
   try {
-    const isPasswordCorrect = await loginService(req, res);
-
-    if (!isPasswordCorrect) {
-      res.status(400).json({ message: "Invalid credentials" });
-    }
+    const user = await loginService(req);
 
     const token = generateToken({
       userId: user._id,
@@ -36,11 +32,17 @@ export const loginController = async (req, res) => {
 
     res.setHeader("Authorization", `Bearer ${token}`);
 
-    res
+    return res
       .status(200)
       .json({ message: "User logged in successfully.", user, token });
   } catch (error) {
+    if (error.message === "USER_NOT_FOUND") {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (error.message === "INVALID_CREDENTIALS") {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
     console.log("Error on login controller.", error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

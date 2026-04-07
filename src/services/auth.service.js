@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-import { hashPassword } from "./password.service.js";
+import { comparePassword, hashPassword } from "./password.service.js";
 
 export const registerService = async (req, res) => {
   const { name, email, password } = req.body;
@@ -14,12 +14,20 @@ export const registerService = async (req, res) => {
   return newUser;
 };
 
-export const loginService = async (req, res) => {
+export const loginService = async (req) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
 
+  if (!user) {
+    throw new Error("USER_NOT_FOUND");
+  }
+
   const isPasswordCorrect = await comparePassword(password, user.password);
 
-  return isPasswordCorrect;
+  if (!isPasswordCorrect) {
+    throw new Error("INVALID_CREDENTIALS");
+  }
+
+  return user;
 };
