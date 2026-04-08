@@ -2,6 +2,7 @@ import express from "express";
 import {
   validate,
   validateCreateSupplier,
+  validateUpdateSupplier,
 } from "../middlewares/validation.middleware.js";
 import {
   createSupplierController,
@@ -20,7 +21,7 @@ router
   .post("/", validateCreateSupplier, validate, createSupplierController)
   .get("/", getAllSuppliersController)
   .get("/:id", getSupplierController)
-  .put("/:id", updateSupplierController)
+  .put("/:id", validateUpdateSupplier, validate, updateSupplierController)
   .delete("/:id", deleteSupplierController);
 
 export default router;
