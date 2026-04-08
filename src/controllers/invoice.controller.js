@@ -57,6 +57,10 @@ export const updateInvoiceController = async (req, res) => {
       return res.status(404).json({ message: "Invoice not found." });
     }
 
+    if (error.message === "Cannot modify a paid invoice") {
+      return res.status(400).json({ message: "Cannot modify a paid invoice." });
+    }
+
     console.log("Error on updateInvoice controller.", error);
     return res.status(500).json({ message: "Internal server error" });
   }
@@ -64,12 +68,20 @@ export const updateInvoiceController = async (req, res) => {
 
 export const deleteInvoiceController = async (req, res) => {
   try {
-    const invoice = await deleteInvoiceService(req);
+    const deletedInvoice = await deleteInvoiceService(req);
 
-    res.status(200).json({ message: "Invoice deleted successfully.", invoice });
+    res
+      .status(200)
+      .json({ message: "Invoice deleted successfully.", deletedInvoice });
   } catch (error) {
     if (error.message === "INVOICE_NOT_FOUND") {
       return res.status(404).json({ message: "Invoice not found." });
+    }
+
+    if (error.message === "Cannot delete a partially_paid invoice") {
+      return res
+        .status(404)
+        .json({ message: "Cannot delete a partially_paid invoice." });
     }
 
     console.log("Error on deleteInvoice controller.", error);

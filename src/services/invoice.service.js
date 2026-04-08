@@ -41,32 +41,44 @@ export const getInvoiceByIdService = async (req) => {
 
 export const updateInvoiceService = async (req) => {
   const { id } = req.params;
-  const { amount, supplierId, duDate, status, description } = req.body;
+  const { amount, supplierId, duDate, description } = req.body;
 
-  const invoice = await Invoice.findOneAndUpdate(
+  const invoice = await Invoice.findById({ _id: id });
+
+  if (invoice.status === "paid") {
+    throw new Error("Cannot modify a paid invoice");
+  }
+
+  const updatedInvoice = await Invoice.findOneAndUpdate(
     { _id: id, userId: req.user._id },
-    { amount, supplierId, duDate, status, description },
+    { amount, supplierId, duDate, description },
     { new: true },
   );
 
-  if (!invoice) {
+  if (!updatedInvoice) {
     throw new Error("INVOICE_NOT_FOUND");
   }
 
-  return invoice;
+  return updatedInvoice;
 };
 
 export const deleteInvoiceService = async (req) => {
   const { id } = req.params;
 
-  const invoice = await Invoice.findOneAndDelete({
+  const invoice = await Invoice.findById({ _id: id });
+
+  if (invoice.status === "partially_paid") {
+    throw new Error("Cannot delete a partially_paid invoice");
+  }
+
+  const deletedInvoice = await Invoice.findOneAndDelete({
     _id: id,
     userId: req.user._id,
   });
 
-  if (!invoice) {
+  if (!deletedInvoice) {
     throw new Error("INVOICE_NOT_FOUND");
   }
 
-  return invoice;
+  return deletedInvoice;
 };

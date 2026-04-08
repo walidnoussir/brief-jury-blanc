@@ -1,4 +1,4 @@
-import { body, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 import User from "../models/user.model.js";
 
 export const validate = (req, res, next) => {
@@ -167,4 +167,22 @@ export const validateUpdateInvoice = [
     .withMessage("Description must be a string")
     .isLength({ max: 500 })
     .withMessage("Description must not exceed 500 characters"),
+];
+
+// validate the payments
+export const validateCreatePayment = [
+  param("id").isMongoId().withMessage("Invalid invoice ID"),
+
+  body("amount")
+    .notEmpty()
+    .withMessage("Amount is required")
+    .isFloat({ gt: 0 })
+    .withMessage("Amount must be a positive number"),
+
+  body("paymentDate")
+    .notEmpty()
+    .withMessage("Payment date is required")
+    .isISO8601()
+    .withMessage("Payment date must be a valid date")
+    .toDate(),
 ];
