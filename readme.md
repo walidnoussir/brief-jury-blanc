@@ -162,7 +162,7 @@ Design diagrams are located in `src/digrammes/`:
 - **`class.png`** — Entity class diagram showing model relationships
 - **`useCase.jpg`** — Use case diagram illustrating system actor interactions
 
-![Class Diagram](src/diagrammes/class.png)
+![Class Diagram](src/digrammes/class.png)
 ![Use Case Diagram](src/digrammes/useCase.jpg)
 
 ---
