@@ -31,3 +31,9 @@ export const loginService = async (req) => {
 
   return user;
 };
+
+export const getMyProfileServie = async (req) => {
+  const myProfile = await User.find(req.user._id).select("-password");
+
+  return myProfile;
+};

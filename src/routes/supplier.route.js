@@ -9,6 +9,7 @@ import {
   deleteSupplierController,
   getAllSuppliersController,
   getSupplierController,
+  getSupplierStatsController,
   updateSupplierController,
 } from "../controllers/supplier.controller.js";
 import { protectRoute } from "../middlewares/auth.middleware.js";
@@ -21,6 +22,7 @@ router
   .post("/", validateCreateSupplier, validate, createSupplierController)
   .get("/", getAllSuppliersController)
   .get("/:id", getSupplierController)
+  .get("/:id/stats", getSupplierStatsController)
   .put("/:id", validateUpdateSupplier, validate, updateSupplierController)
   .delete("/:id", deleteSupplierController);
 

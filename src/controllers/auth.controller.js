@@ -1,4 +1,8 @@
-import { loginService, registerService } from "../services/auth.service.js";
+import {
+  getMyProfileServie,
+  loginService,
+  registerService,
+} from "../services/auth.service.js";
 import { generateToken } from "../services/token.service.js";
 
 export const registerController = async (req, res) => {
@@ -43,6 +47,17 @@ export const loginController = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
     console.log("Error on login controller.", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getMyProfileController = async (req, res) => {
+  try {
+    const myProfile = await getMyProfileServie(req);
+
+    res.status(200).json(myProfile);
+  } catch (error) {
+    console.log("Error on getMyProfile controller.", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

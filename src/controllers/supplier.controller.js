@@ -1,3 +1,4 @@
+import { getSupplierStatsService } from "../services/analytics.service.js";
 import {
   createSupplierService,
   deleteSupplierService,
@@ -72,6 +73,19 @@ export const deleteSupplierController = async (req, res) => {
       return res.status(404).json({ message: "Supplier not found." });
     }
     console.log("Error on getSupplier controller.", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getSupplierStatsController = async (req, res) => {
+  try {
+    const stats = await getSupplierStatsService(req);
+
+    res
+      .status(200)
+      .json({ message: "Supplier stats fetched successfully.", stats });
+  } catch (error) {
+    console.log("Error on getSupplierStats controller.", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
