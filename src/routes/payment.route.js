@@ -11,7 +11,12 @@ import {
 const router = express.Router();
 
 router
-  .post("/", validateCreatePayment, validate, createPaymentController)
-  .get("/", getPaymentsController);
+  .post(
+    "/:id/payments",
+    validateCreatePayment,
+    validate,
+    createPaymentController,
+  )
+  .get("/:id/payments", getPaymentsController);
 
 export default router;

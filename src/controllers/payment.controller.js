@@ -5,15 +5,22 @@ import {
 
 export const createPaymentController = async (req, res) => {
   try {
-    const payment = await createPaymentService(req);
+    const { payment, invoiceStatus } = await createPaymentService(req);
 
     res.status(201).json({
       message: "Payment created successfully.",
       payment,
+      invoiceStatus,
     });
   } catch (error) {
-    if (error.message === "Cannot exceed the invoice amount") {
-      res.status(400).json({ message: "Cannot exceed the invoice amount" });
+    if (error.message === "INVOICE_NOT_FOUND") {
+      return res.status(404).json({ message: "Invoice not found." });
+    }
+
+    if (error.message === "AMOUNT_EXCEEDS_REMAINING_BALANCE") {
+      return res
+        .status(400)
+        .json({ message: "Amount exceeds the remaining invoice balance." });
     }
 
     console.log("Error on createPayment controller.", error);

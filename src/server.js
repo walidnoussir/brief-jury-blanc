@@ -15,7 +15,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/suppliers", supplierRoutes);
 app.use("/api/invoices", invoiceRoutes);
-app.use("/api/invoices/:id/payments", paymentRoutes);
+app.use("/api/invoices", paymentRoutes);
 
 const PORT = process.env.PORT || 5000;
 
