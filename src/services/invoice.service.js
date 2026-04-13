@@ -82,3 +82,14 @@ export const deleteInvoiceService = async (req) => {
 
   return deletedInvoice;
 };
+
+export const getOverdueInvoicesService = async (userId) => {
+  const today = new Date().getDay();
+
+  const invoices = await Invoice.aggregate([
+    { $match: { duDate: { $gte: today } } },
+    { $group: { status: "$unpaid" } },
+  ]);
+
+  return invoices;
+};

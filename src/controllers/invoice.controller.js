@@ -3,6 +3,7 @@ import {
   deleteInvoiceService,
   getAllInvoicesService,
   getInvoiceByIdService,
+  getOverdueInvoicesService,
   updateInvoiceService,
 } from "../services/invoice.service.js";
 
@@ -85,6 +86,18 @@ export const deleteInvoiceController = async (req, res) => {
     }
 
     console.log("Error on deleteInvoice controller.", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getOverdueInvoicesController = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const invoices = await getOverdueInvoicesService(userId);
+
+    res.status(200).json(invoices);
+  } catch (error) {
+    console.log("Error on getOverdueInvoicesController.", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
